@@ -1,0 +1,38 @@
+
+http://localhost:3000/api/auth/providers
+http://localhost:3000/api/whoAmI
+http://localhost:3000/api/restricted
+
+---------------------------------------------------------
+useSession -> navbar,
+içinde data ve status var data email name ve resim dönüyor
+status de uc farklı duruma göre loading, authenticated, unauthenticated veriyor
+————————————————————————————
+
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}) {
+  return (
+    <SessionProvider session={session}>
+      {Component.auth ? (
+        <Auth>
+          <Component {...pageProps} />
+        </Auth>
+      ) : (
+        <Component {...pageProps} />
+      )}
+    </SessionProvider>
+  )
+}
+
+function Auth({ children }) {
+  // if `{ required: true }` is supplied, `status` can only be "loading" or "authenticated"
+  const { status } = useSession({ required: true })
+
+  if (status === "loading") {
+    return <div>Loading...</div>
+  }
+
+  return children
+}
